@@ -1,7 +1,7 @@
-module github.com/TutorialEdge/realtime-chat-go-react
+module github.com/YeonV/ledfx-go
 
 go 1.17
 
 require (
-	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/gorilla/websocket v1.4.2
 )
