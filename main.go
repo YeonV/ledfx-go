@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -51,9 +53,33 @@ func reader(conn *websocket.Conn) {
 		// fmt.Printf("Type: %s, Message: %s", msg.Type, msg.Message)
 
 		if msg.Message == "frontend connected" {
-			if err := conn.WriteMessage(messageType, []byte(`{"type":"success","message":"BOOOM" }`)); err != nil {
-				log.Println(err)
-				return
+			// EXAMPLE DUMMY
+			uptimeTicker := time.NewTicker(5 * time.Second)
+			uptimeTickerb := time.NewTicker(5 * time.Second)
+			dummyTypes := make([]string, 0)
+			dummyTypes = append(dummyTypes,
+				"success",
+				"info",
+				"warning",
+				"error")
+			dummyMsgs := make([]string, 0)
+			dummyMsgs = append(dummyMsgs,
+				"Sent from new LedFx-Go",
+				"New core detected!",
+				"BOOM",
+				"Just like that")
+
+			rand.Seed(time.Now().Unix()) // initialize global pseudo random generator
+			for {
+				select {
+				case <-uptimeTicker.C:
+					if err := conn.WriteMessage(messageType, []byte(`{"type":"`+dummyTypes[rand.Intn(len(dummyTypes))]+`","message":"`+dummyMsgs[rand.Intn(len(dummyMsgs))]+`" }`)); err != nil {
+						log.Println(err)
+						return
+					}
+				case <-uptimeTickerb.C:
+
+				}
 			}
 		}
 	}
@@ -183,6 +209,7 @@ func setupRoutes() {
 }
 
 func main() {
+
 	fmt.Println("===========================================")
 	fmt.Println("            LedFx v0.01 by Blade")
 	fmt.Println("    [CTRL]+Click: http://localhost:8080")
