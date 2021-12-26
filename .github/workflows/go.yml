@@ -1,0 +1,34 @@
+name: Go
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+
+#     - name: Set up Go
+#       uses: actions/setup-go@v2
+#       with:
+#         go-version: 1.17
+
+#     - name: Build
+#       run: go build -v ./...
+
+  release-windows-amd64:
+      name: release windows/amd64
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@master
+      - name: compile and release
+        uses: ngs/go-release.action@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOARCH: amd64
+          GOOS: windows
+#           EXTRA_FILES: "LICENSE"
