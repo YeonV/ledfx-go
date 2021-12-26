@@ -23,6 +23,13 @@ cd ledfx-go
 go run main.go
 ```
 
+
+### Compile
+
+```sh
+go build
+```
+
 ### Notes
 
 - You need to activate DevMode (ask me in discord)
