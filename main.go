@@ -3,6 +3,7 @@ package main
 
 import (
 	"archive/zip"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -233,6 +234,7 @@ func openbrowser(url string) {
 }
 
 func onReady() {
+	//go:embed assets/logo.ico
 	systray.SetIcon(getIcon("assets/logo.ico"))
 	systray.SetTitle("LedFx-Go")
 	systray.SetTooltip("LedFx-Go")
