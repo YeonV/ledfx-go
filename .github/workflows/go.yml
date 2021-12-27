@@ -33,8 +33,16 @@ jobs:
         run: |
           GOOSARCH=${{matrix.goosarch}}
           GOOS=${GOOSARCH%/*}
-          GOARCH=${GOOSARCH#*/}          
-          ENDING=win.exe
+          GOARCH=${GOOSARCH#*/}
+          if [[ $GOOS == 'windows']]; then
+            ENDING=win.exe
+          fi
+          if [[ $GOOS == 'mac']]; then
+            ENDING=mac
+          fi
+          if [[ $GOOS == 'linux']]; then
+            ENDING=linux
+          fi          
           BINARY_NAME=${{github.repository}}-${{github.event.head_commit.message}}--$ENDING
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
@@ -45,6 +53,16 @@ jobs:
       - name: Release Notes
         run:
           git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{github.event.head_commit.message}}',
+              sha: context.sha
+            })
       - name: Release with Notes
         uses: softprops/action-gh-release@v1
         with:

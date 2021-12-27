@@ -243,18 +243,14 @@ func onReady() {
 	mGithub := systray.AddMenuItem("Github", "Open LedFx in Browser")
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
-	go func() {
-		<-mQuit.ClickedCh
-		fmt.Println("Requesting quit")
-		systray.Quit()
-		fmt.Println("Finished quitting")
-	}()
 	for {
 		select {
 		case <-mOpen.ClickedCh:
 			openbrowser("http://localhost:8080")
 		case <-mGithub.ClickedCh:
 			openbrowser("https://github.com/YeonV/ledfx-go")
+		case <-mQuit.ClickedCh:
+			systray.Quit()
 		}
 	}
 }
