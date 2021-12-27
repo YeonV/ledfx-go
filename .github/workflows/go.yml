@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Generate build files
-        uses: thatisuday/go-cross-build@v1
+        uses: jozo/go-cross-build@patch-1
         with:
             platforms: 'linux/amd64, darwin/amd64, windows/amd64'
             package: 'go'
@@ -46,10 +46,12 @@ jobs:
         with:
           body_path: ".github/RELEASE-TEMPLATE.md"
           tag_name: ${{github.event.head_commit.message}}
-          draft: true
-          files: |
-            dist/ledfx-go-windows-amd64.exe
-            dist/ledfx-go-linux-amd64
-            dist/ledfx-go-darvin-amd64
+          draft: false          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy build-artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "./dist/*.tar.gz"
