@@ -41,6 +41,7 @@ go build
 - Serve latest frontend on http://localhost:8080/
 - Serve Websockets on ws://localhost:8080/ws
 - Bi-Directional WS-Message-Handling
+- Systray
 
 ### Ressources
 https://tutorialedge.net/projects/chat-system-in-go-and-react/
