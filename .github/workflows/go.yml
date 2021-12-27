@@ -39,9 +39,14 @@ jobs:
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
           echo "GOARCH=$GOARCH" >> $GITHUB_ENV
-      - name: Build
+      - name: Build Win
+        if: $GOOS=='windows'
         run: |
-          env GO111MODULE=on go build -o "$BINARY_NAME" -v -ldflags -H=windowsgui
+            env GO111MODULE=on go build -o "$BINARY_NAME" -v -ldflags -H=windowsgui
+      - name: Build Win
+        if: $GOOS=='darwin'
+        run: |
+            env GO111MODULE=on CC=gcc CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -gccgoflags="-DDARWIN -x objective-c -fobjc-arc" -ldflags="framework=Cocoa" .
       - name: Release Notes
         run: git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * by %an' --no-merges >> ".github/RELEASE-TEMPLATE.md"
       - name: Create tag
