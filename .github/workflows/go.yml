@@ -52,7 +52,7 @@ jobs:
       - name: Build Linux
         if: env.GOOS=='linux'
         run: |
-            env GO111MODULE=on go build -o "$BINARY_NAME" -v -ldflags
+            env GO111MODULE=on go build -o "$BINARY_NAME"
       - name: Release Notes
         run: git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * by %an' --no-merges >> ".github/RELEASE-TEMPLATE.md"
       - name: Create tag
