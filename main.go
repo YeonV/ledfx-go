@@ -5,15 +5,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 	"time"
 
+	"github.com/getlantern/systray"
 	"github.com/gorilla/websocket"
 )
 
@@ -208,12 +212,68 @@ func setupRoutes() {
 	http.HandleFunc("/ws", serveWs)
 }
 
-func main() {
+func openbrowser(url string) {
+	var err error
 
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+func onReady() {
+	systray.SetIcon(getIcon("assets/logo.ico"))
+	systray.SetTitle("LedFx-Go")
+	systray.SetTooltip("LedFx-Go")
+	mOpen := systray.AddMenuItem("Open", "Open LedFx in Browser")
+	// mOpen.SetIcon(getIcon("assets/logo.ico"))
+	mGithub := systray.AddMenuItem("Github", "Open LedFx in Browser")
+	systray.AddSeparator()
+	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
+	// mQuit.SetIcon(getIcon("assets/logo.ico"))
+	go func() {
+		<-mQuit.ClickedCh
+		fmt.Println("Requesting quit")
+		systray.Quit()
+		fmt.Println("Finished quitting")
+	}()
+	for {
+		select {
+		case <-mOpen.ClickedCh:
+			openbrowser("http://localhost:8080")
+		case <-mGithub.ClickedCh:
+			openbrowser("https://github.com/YeonV/ledfx-go")
+		}
+	}
+}
+
+func onExit() {
+	// clean up here
+}
+func getIcon(s string) []byte {
+	b, err := ioutil.ReadFile(s)
+	if err != nil {
+		fmt.Print(err)
+	}
+	return b
+}
+func main() {
+	systray.Run(onReady, onExit)
 	fmt.Println("===========================================")
 	fmt.Println("            LedFx v0.01 by Blade")
 	fmt.Println("    [CTRL]+Click: http://localhost:8080")
 	fmt.Println("===========================================")
 	setupRoutes()
 	http.ListenAndServe(":8080", nil)
+
 }
