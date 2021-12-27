@@ -22,14 +22,14 @@
         "Comments": "",
         "CompanyName": "Yeon",
         "FileDescription": "",
-        "FileVersion": "v0.0.2.0",
+        "FileVersion": "v0.0.3.0",
         "InternalName": "ledfx-go",
         "LegalCopyright": "by Blade",
         "LegalTrademarks": "",
         "OriginalFilename": "ledfx-go.exe",
         "PrivateBuild": "",
         "ProductName": "LedFx-Go",
-        "ProductVersion": "v0.0.2.0",
+        "ProductVersion": "v0.0.3.0",
         "SpecialBuild": ""
     },
     "VarFileInfo": {
