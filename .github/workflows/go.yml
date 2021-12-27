@@ -40,11 +40,11 @@ jobs:
           echo "GOOS=$GOOS" >> $GITHUB_ENV
           echo "GOARCH=$GOARCH" >> $GITHUB_ENV
       - name: Build Win
-        if: $GOOS=='windows'
+        if: env.GOOS=='windows'
         run: |
             env GO111MODULE=on go build -o "$BINARY_NAME" -v -ldflags -H=windowsgui
       - name: Build Win
-        if: $GOOS=='darwin'
+        if: env.GOOS=='darwin'
         run: |
             env GO111MODULE=on CC=gcc CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -gccgoflags="-DDARWIN -x objective-c -fobjc-arc" -ldflags="framework=Cocoa" .
       - name: Release Notes
