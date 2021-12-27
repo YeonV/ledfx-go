@@ -20,7 +20,7 @@ jobs:
         goosarch:
           - "windows/amd64"
           # - "darwin/amd64"
-          - "linux/amd64"          
+          - "linux/386"          
           
     steps:
       - name: Checkout code
