@@ -8,18 +8,17 @@ on:
 defaults:
   run:
     shell: bash
-    
-    
+
 jobs:
   release:
-    name: Create Release    
+    name: Create Release
     if: "startsWith(github.event.head_commit.message, 'v')"
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     strategy:
       matrix:
         # List of GOOS and GOARCH pairs from `go tool dist list`
         goosarch:
-          - 'windows/amd64'
+          - "windows/amd64"
           # etc
     steps:
       - name: Checkout code
@@ -28,21 +27,13 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.17'
+          go-version: "1.17"
       - name: Get OS and arch info
         run: |
           GOOSARCH=${{matrix.goosarch}}
           GOOS=${GOOSARCH%/*}
           GOARCH=${GOOSARCH#*/}
-          if [[ $GOOS == 'windows']] then
-            ENDING=win.exe
-          fi
-          if [[ $GOOS == 'darwin']] then
-            ENDING=mac
-          fi
-          if [[ $GOOS == 'linux']] then
-            ENDING=linux
-          fi          
+          ENDING=win.exe          
           BINARY_NAME=${{github.repository}}-${{github.event.head_commit.message}}--$ENDING
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
@@ -51,8 +42,7 @@ jobs:
         run: |
           env GO111MODULE=on go build -o "$BINARY_NAME" -v -ldflags -H=windowsgui
       - name: Release Notes
-        run:
-          git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
+        run: git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
       - name: Create tag
         uses: actions/github-script@v5
         with:
