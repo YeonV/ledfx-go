@@ -12,7 +12,8 @@ defaults:
     
 jobs:
   release:
-    name: Create Release
+    name: Create Release    
+    if: "startsWith(github.event.head_commit.message, 'v')"
     runs-on: 'ubuntu-latest'
     strategy:
       matrix:
@@ -32,15 +33,15 @@ jobs:
         run: |
           GOOSARCH=${{matrix.goosarch}}
           GOOS=${GOOSARCH%/*}
-          GOARCH=${GOOSARCH#*/}
-          ENDING=.exe
-          BINARY_NAME=${{github.repository}}-$GOOS-$GOARCH.$ENDING
+          GOARCH=${GOOSARCH#*/}          
+          ENDING=win.exe
+          BINARY_NAME=${{github.repository}}-${{github.event.head_commit.message}}$ENDING
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
           echo "GOARCH=$GOARCH" >> $GITHUB_ENV
       - name: Build
         run: |
-          go build -o "$BINARY_NAME" -v
+          go build -o "$BINARY_NAME" -v -ldflags -H=windowsgui
       - name: Release Notes
         run:
           git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
@@ -48,6 +49,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: ".github/RELEASE-TEMPLATE.md"
+          tag_name: ${{github.event.head_commit.message}}
           draft: true
           files: ${{env.BINARY_NAME}}
         env:
