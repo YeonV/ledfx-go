@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
@@ -233,17 +232,17 @@ func openbrowser(url string) {
 
 }
 
+//go:embed assets/logo.ico
+var logo []byte
+
 func onReady() {
-	//go:embed assets/logo.ico
-	systray.SetIcon(getIcon("assets/logo.ico"))
+	systray.SetIcon(logo)
 	systray.SetTitle("LedFx-Go")
 	systray.SetTooltip("LedFx-Go")
 	mOpen := systray.AddMenuItem("Open", "Open LedFx in Browser")
-	// mOpen.SetIcon(getIcon("assets/logo.ico"))
 	mGithub := systray.AddMenuItem("Github", "Open LedFx in Browser")
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
-	// mQuit.SetIcon(getIcon("assets/logo.ico"))
 	go func() {
 		<-mQuit.ClickedCh
 		fmt.Println("Requesting quit")
@@ -260,13 +259,6 @@ func onReady() {
 	}
 }
 
-func getIcon(s string) []byte {
-	b, err := ioutil.ReadFile(s)
-	if err != nil {
-		fmt.Print(err)
-	}
-	return b
-}
 func main() {
 	fmt.Println("===========================================")
 	fmt.Println("            LedFx-Go by Blade")
