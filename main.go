@@ -1,3 +1,4 @@
+//go:generate goversioninfo -icon=assets/logo.ico
 package main
 
 import (
@@ -257,9 +258,6 @@ func onReady() {
 	}
 }
 
-func onExit() {
-	// clean up here
-}
 func getIcon(s string) []byte {
 	b, err := ioutil.ReadFile(s)
 	if err != nil {
@@ -268,12 +266,13 @@ func getIcon(s string) []byte {
 	return b
 }
 func main() {
-	systray.Run(onReady, onExit)
 	fmt.Println("===========================================")
-	fmt.Println("            LedFx v0.01 by Blade")
+	fmt.Println("            LedFx-Go by Blade")
 	fmt.Println("    [CTRL]+Click: http://localhost:8080")
 	fmt.Println("===========================================")
 	setupRoutes()
-	http.ListenAndServe(":8080", nil)
-
+	go func() {
+		http.ListenAndServe(":8080", nil)
+	}()
+	systray.Run(onReady, nil)
 }

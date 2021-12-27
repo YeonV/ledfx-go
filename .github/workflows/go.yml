@@ -11,20 +11,6 @@ defaults:
     
     
 jobs:
-
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v2
-
-#     - name: Set up Go
-#       uses: actions/setup-go@v2
-#       with:
-#         go-version: 1.17
-
-#     - name: Build
-#       run: go build -v ./...
-
   release:
     name: Create Release
     runs-on: 'ubuntu-latest'
@@ -47,7 +33,8 @@ jobs:
           GOOSARCH=${{matrix.goosarch}}
           GOOS=${GOOSARCH%/*}
           GOARCH=${GOOSARCH#*/}
-          BINARY_NAME=${{github.repository}}-$GOOS-$GOARCH
+          ENDING=.exe
+          BINARY_NAME=${{github.repository}}-$GOOS-$GOARCH.$ENDING
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
           echo "GOARCH=$GOARCH" >> $GITHUB_ENV
