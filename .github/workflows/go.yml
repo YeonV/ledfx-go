@@ -47,11 +47,11 @@ jobs:
       - name: Build Mac
         if: env.GOOS=='darwin'
         run: |
-            sudo apt-get install gcc libgtk-3-dev libappindicator3-dev
             env GO111MODULE=on CC=gcc CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -gccgoflags="-DDARWIN -x objective-c -fobjc-arc" -ldflags="framework=Cocoa" .
       - name: Build Linux
         if: env.GOOS=='linux'
         run: |
+            sudo apt-get install gcc libgtk-3-dev libappindicator3-dev
             env GO111MODULE=on go build -o "$BINARY_NAME"
       - name: Release Notes
         run: git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * by %an' --no-merges >> ".github/RELEASE-TEMPLATE.md"
