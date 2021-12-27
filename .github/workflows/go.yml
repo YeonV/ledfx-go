@@ -35,7 +35,7 @@ jobs:
           GOOS=${GOOSARCH%/*}
           GOARCH=${GOOSARCH#*/}          
           ENDING=win.exe
-          BINARY_NAME=${{github.repository}}-${{github.event.head_commit.message}}$ENDING
+          BINARY_NAME=${{github.repository}}-${{github.event.head_commit.message}}--$ENDING
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
           echo "GOARCH=$GOARCH" >> $GITHUB_ENV
