@@ -66,6 +66,7 @@ jobs:
               sha: context.sha
             })
       - name: Release with Notes
+        if: always()
         uses: softprops/action-gh-release@v1
         with:
           body_path: ".github/RELEASE-TEMPLATE.md"
