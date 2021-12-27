@@ -34,13 +34,13 @@ jobs:
           GOOSARCH=${{matrix.goosarch}}
           GOOS=${GOOSARCH%/*}
           GOARCH=${GOOSARCH#*/}
-          if [[ $GOOS == 'windows']]; then
+          if [[ $GOOS == 'windows']] then
             ENDING=win.exe
           fi
-          if [[ $GOOS == 'mac']]; then
+          if [[ $GOOS == 'darwin']] then
             ENDING=mac
           fi
-          if [[ $GOOS == 'linux']]; then
+          if [[ $GOOS == 'linux']] then
             ENDING=linux
           fi          
           BINARY_NAME=${{github.repository}}-${{github.event.head_commit.message}}--$ENDING
